@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governing for the Future of Learning | LearnerStudio</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Varta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dt:#1B3F39;--wp:#480442;--mag:#94266B;--rust:#842800;
+  --bl:#454AF4;--gr:#82D461;--yl:#F8FF70;
+  --t60:#496561;--t40:#768C88;--t10:#D1D9D7;
+  --w:#FFF;--cream:#FAF9F7;--g100:#F4F2EF;--g200:#E6E3DE;--g500:#8A857F;--g700:#4A4744;--g900:#1A1817;
+  --fh:'Newsreader',Georgia,serif;--fb:'Varta',Helvetica,Arial,sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--fb);color:var(--dt);background:var(--w);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+
+.page{display:none;opacity:0;min-height:100vh;flex-direction:column}
+.page.active{display:flex;opacity:1}
+
+/* ═══ GLOBAL NAV ═══ */
+.gnav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.5rem;background:var(--dt);transition:background .3s}
+.gnav .logo{font-family:var(--fb);font-weight:700;font-size:.95rem;color:var(--w);opacity:.85;text-decoration:none;cursor:pointer}
+/* LOGO PLACEHOLDER: Replace the text with an <img> tag pointing to your logo file:
+   <img src="logo-reverse.svg" alt="LearnerStudio" height="28"> */
+.hamburger{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:6px}
+.hamburger span{display:block;width:20px;height:2px;background:var(--w);border-radius:2px;transition:all .25s}
+.menu-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(27,63,57,.97);z-index:99;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem}
+.menu-overlay.open{display:flex}
+.menu-overlay a{font-family:var(--fh);font-size:1.6rem;color:var(--w);text-decoration:none;opacity:.8;transition:opacity .2s;cursor:pointer}
+.menu-overlay a:hover{opacity:1}
+.menu-close{position:absolute;top:1rem;right:1.5rem;background:none;border:none;color:var(--w);font-size:1.8rem;cursor:pointer;opacity:.6}
+.menu-close:hover{opacity:1}
+
+/* ═══ LANDING ═══ */
+.landing{padding-top:48px}
+.l-hero{background:var(--dt);color:var(--w);padding:3rem 2rem 3.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative}
+.l-hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:50px;background:var(--w);clip-path:ellipse(55% 100% at 50% 100%)}
+.l-hero h1{font-family:var(--fh);font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:700;line-height:1.15;max-width:720px;margin-bottom:1.5rem}
+.l-hero .lead{font-size:1.05rem;line-height:1.7;color:rgba(255,255,255,.78);max-width:600px;margin-bottom:2rem}
+
+.l-intro{padding:3rem 2rem 2rem;max-width:680px;margin:0 auto;text-align:center}
+.l-intro h2{font-family:var(--fh);font-size:1.35rem;font-weight:600;color:var(--dt);margin-bottom:.75rem}
+.l-intro p{font-size:.95rem;line-height:1.7;color:var(--g700);margin-bottom:1rem}
+.l-principles{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;text-align:left;margin:1.25rem auto;max-width:560px;font-size:.82rem;color:var(--t60)}
+.l-principles .lp{display:flex;align-items:baseline;gap:.4rem}
+.l-principles .lp::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--mag);flex-shrink:0;margin-top:6px}
+
+.l-cta{padding:1.5rem 2rem 3.5rem;display:flex;flex-direction:column;align-items:center}
+.l-cta .prompt{font-family:var(--fh);font-size:1.15rem;font-weight:600;color:var(--dt);margin-bottom:.4rem}
+.l-cta .sub{font-size:.88rem;color:var(--g500);margin-bottom:1.5rem;max-width:480px;text-align:center}
+.aud-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:.85rem;max-width:780px;width:100%;margin-bottom:1.5rem}
+.ac{background:var(--w);border:2px solid var(--g200);border-radius:10px;padding:1.1rem 1rem;cursor:pointer;transition:all .22s;text-align:left}
+.ac:hover{border-color:var(--dt);transform:translateY(-2px);box-shadow:0 4px 14px rgba(27,63,57,.08)}
+.ac .lb{font-family:var(--fh);font-size:.95rem;font-weight:600;color:var(--dt);margin-bottom:.15rem}
+.ac .ds{font-size:.78rem;color:var(--g500);line-height:1.4}
+.skip{font-size:.82rem;color:var(--g500)}.skip a{color:var(--mag);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* ═══ DIAGNOSTIC ═══ */
+.diagnostic{background:var(--cream);padding-top:48px}
+.dh{background:var(--dt);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:flex-end;gap:.75rem;position:sticky;top:48px;z-index:9}
+.db{background:none;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.5);font-family:var(--fb);font-size:.75rem;font-weight:600;padding:.3rem .7rem;border-radius:5px;cursor:pointer;transition:all .2s}
+.db:hover{border-color:rgba(255,255,255,.35);color:#fff}
+.pb{width:110px;height:3px;background:rgba(255,255,255,.1);border-radius:100px;overflow:hidden}
+.pf{height:100%;background:var(--gr);border-radius:100px;transition:width .4s}
+.pt{font-size:.7rem;color:rgba(255,255,255,.35);min-width:2rem;text-align:right}
+
+.dbody{flex:1;display:flex;justify-content:center;align-items:flex-start;padding:2.5rem 2rem 3rem}
+.qw{max-width:620px;width:100%}
+.qtag{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mag);margin-bottom:.85rem;display:block}
+.qt{font-family:var(--fh);font-size:clamp(1.1rem,2.4vw,1.4rem);font-weight:600;line-height:1.4;color:var(--dt);margin-bottom:1.5rem}
+.opts{display:flex;flex-direction:column;gap:.55rem}
+.opt{background:var(--w);border:2px solid var(--g200);border-radius:10px;padding:.95rem 1rem .95rem 2.8rem;cursor:pointer;transition:all .2s;font-size:.88rem;line-height:1.5;color:var(--g700);position:relative}
+.opt::before{content:attr(data-l);position:absolute;left:.9rem;top:.95rem;width:1.3rem;height:1.3rem;border-radius:50%;background:var(--g100);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--g500);transition:all .2s}
+.opt:hover{border-color:var(--t40);background:var(--cream)}
+.opt:hover::before{background:var(--t40);color:var(--w)}
+.opt.sel{border-color:var(--dt);background:rgba(27,63,57,.03);color:var(--dt);font-weight:500}
+.opt.sel::before{background:var(--dt);color:var(--w)}
+.slo{animation:sO .2s ease forwards}
+.sli{animation:sI .3s ease forwards}
+@keyframes sO{to{opacity:0;transform:translateX(-18px)}}
+@keyframes sI{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+
+/* ═══ RESULTS ═══ */
+.results{background:var(--cream);padding-top:48px}
+.rt{background:var(--dt);color:var(--w);padding:2.5rem 2rem 3.5rem;text-align:center;position:relative}
+.rt::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:35px;background:var(--cream);clip-path:ellipse(55% 100% at 50% 100%)}
+.rt h2{font-family:var(--fh);font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:700;margin-bottom:.4rem}
+.rt p{font-size:.92rem;color:rgba(255,255,255,.6);max-width:480px;margin:0 auto}
+.rb{max-width:800px;margin:0 auto;padding:1.5rem 2rem 3rem}
+
+.cd{background:var(--w);border-radius:12px;padding:1.75rem 2rem;box-shadow:0 2px 10px rgba(0,0,0,.03);margin-bottom:1.15rem}
+.cd h3{font-family:var(--fh);font-size:1.1rem;color:var(--dt);margin-bottom:.75rem}
+.cd p{font-size:.88rem;line-height:1.7;color:var(--g700);margin-bottom:.7rem}
+.cd p:last-child{margin-bottom:0}
+
+.ins{background:rgba(148,38,107,.05);border-left:3px solid var(--mag);padding:.8rem 1.1rem;border-radius:0 7px 7px 0;margin:.85rem 0}
+.ins p{font-family:var(--fh);font-style:italic;color:var(--wp);font-size:.9rem;margin:0!important;line-height:1.6}
+
+.rw{display:flex;justify-content:center;padding:.5rem 0}
+
+/* Five Big Ideas cards */
+.fbi-section{background:var(--dt);border-radius:12px;padding:1.75rem 2rem;margin-bottom:1.15rem;color:var(--w)}
+.fbi-section h3{font-family:var(--fh);font-size:1.1rem;color:var(--w);margin-bottom:.4rem}
+.fbi-section>p{font-size:.88rem;color:rgba(255,255,255,.6);margin-bottom:1.25rem}
+.fbi-grid{display:grid;grid-template-columns:1fr;gap:.65rem}
+.fbi-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:1rem 1.15rem;cursor:pointer;transition:all .22s}
+.fbi-card:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+.fbi-card .fbi-num{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gr);margin-bottom:.3rem}
+.fbi-card h4{font-family:var(--fh);font-size:.95rem;font-weight:600;color:var(--w);margin-bottom:.25rem}
+.fbi-card p{font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.45;margin:0}
+
+.btn{font-family:var(--fb);font-size:.83rem;font-weight:600;padding:.55rem 1.3rem;border-radius:7px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem}
+.bp{background:var(--dt);color:#fff}.bp:hover{background:var(--t60)}
+.bm{background:var(--mag);color:#fff}.bm:hover{background:#b83d88}
+.bw{background:var(--w);color:var(--dt);border:1px solid var(--g200)}.bw:hover{border-color:var(--t40)}
+.bg{background:var(--gr);color:var(--dt)}.bg:hover{background:#6ec44e}
+.br{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.ft{text-align:center;padding:1.5rem 2rem;font-size:.75rem;color:var(--g500);border-top:1px solid var(--g200);margin-top:1rem}
+.ft a{color:var(--mag);text-decoration:none}
+
+/* ═══ FIVE BIG IDEAS PAGE ═══ */
+.ideas{background:var(--w);padding-top:48px}
+.id-top{background:var(--dt);color:var(--w);padding:2.5rem 2rem 3.5rem;text-align:center;position:relative}
+.id-top::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:35px;background:var(--w);clip-path:ellipse(55% 100% at 50% 100%)}
+.id-top h2{font-family:var(--fh);font-size:clamp(1.5rem,3.5vw,2rem);font-weight:700;margin-bottom:.4rem}
+.id-top p{font-size:.9rem;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto}
+
+.id-nav{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;padding:1.5rem 2rem;max-width:800px;margin:0 auto}
+.id-tab{font-family:var(--fb);font-size:.78rem;font-weight:600;padding:.45rem 1rem;border-radius:100px;border:1px solid var(--g200);background:var(--w);color:var(--g500);cursor:pointer;transition:all .2s}
+.id-tab:hover{border-color:var(--t40);color:var(--dt)}
+.id-tab.active{background:var(--dt);color:var(--w);border-color:var(--dt)}
+
+.id-body{max-width:720px;margin:0 auto;padding:1rem 2rem 3rem}
+.idea-panel{display:none}
+.idea-panel.active{display:block}
+.idea-panel .idea-num{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mag);margin-bottom:.5rem;display:block}
+.idea-panel h3{font-family:var(--fh);font-size:1.5rem;font-weight:700;color:var(--dt);margin-bottom:1rem;line-height:1.25}
+.idea-panel .idea-body p{font-size:.92rem;line-height:1.75;color:var(--g700);margin-bottom:1rem}
+.idea-panel .idea-body strong{color:var(--dt)}
+.idea-panel .idea-body h4{font-family:var(--fh);font-size:1.05rem;color:var(--dt);margin:1.5rem 0 .6rem}
+
+.idea-nav-row{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;margin-top:1.5rem;border-top:1px solid var(--g200)}
+.idea-nav-btn{font-size:.85rem;color:var(--mag);cursor:pointer;text-decoration:none;font-weight:500}
+.idea-nav-btn:hover{text-decoration:underline}
+
+/* ═══ ABOUT ═══ */
+.about{background:var(--w);padding-top:48px}
+.abt{background:var(--dt);color:var(--w);padding:2.5rem 2rem;text-align:center}
+.abt h2{font-family:var(--fh);font-size:1.6rem;font-weight:700;margin-bottom:.3rem}
+.abt p{font-size:.88rem;color:rgba(255,255,255,.55);max-width:440px;margin:0 auto}
+.abb{max-width:680px;margin:1.5rem auto;padding:0 2rem 3rem}
+.abb h3{font-family:var(--fh);font-size:1.05rem;color:var(--dt);margin:1.25rem 0 .5rem}
+.abb p{font-size:.86rem;line-height:1.7;color:var(--g700);margin-bottom:.65rem}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:.45rem;margin:.75rem 0}
+.mm{background:var(--cream);border:1px solid var(--g200);border-radius:7px;padding:.55rem .8rem}
+.mm .n{font-family:var(--fh);font-weight:600;font-size:.85rem;color:var(--dt)}
+.mm .o{font-size:.72rem;color:var(--g500)}
+.abk{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;color:var(--mag);cursor:pointer;margin-top:1rem;text-decoration:none}
+
+@media(max-width:600px){
+  .l-hero{padding:2.5rem 1.25rem 3rem}
+  .l-intro,.l-cta{padding-left:1.25rem;padding-right:1.25rem}
+  .l-principles{grid-template-columns:1fr}
+  .aud-grid{grid-template-columns:1fr 1fr}
+  .dbody{padding:2rem 1.25rem}
+  .rb,.id-body,.abb{padding-left:1.25rem;padding-right:1.25rem}
+  .cd,.fbi-section{padding:1.3rem 1.25rem}
+  .mg{grid-template-columns:1fr}
+  .br{flex-direction:column}.br .btn{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ GLOBAL NAV ═══ -->
+<nav class="gnav">
+  <a class="logo" onclick="showPage('pg-landing')">LearnerStudio</a>
+  <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div id="menuOverlay" class="menu-overlay">
+  <button class="menu-close" onclick="toggleMenu()">&times;</button>
+  <a onclick="closeThen('pg-landing')">Home</a>
+  <a onclick="closeThen('pg-ideas',0)">The Five Big Ideas</a>
+  <a onclick="closeThen('pg-about')">The Design Group</a>
+  <a href="https://learnerstudio.org" target="_blank">About LearnerStudio</a>
+  <a href="https://docs.google.com/document/d/1CnWblYx-x16RmfPZ1uXyt8_7KK62rELCrxkiyn7dNew/edit" target="_blank">Full Report</a>
+</div>
+
+<!-- ═══ LANDING ═══ -->
+<div id="pg-landing" class="page landing active">
+  <div class="l-hero">
+    <h1>No current governance model was designed for the future of learning. Now what?</h1>
+    <p class="lead">Parent dissatisfaction is rising. The federal role in education is shifting. Accountability systems are fracturing. The result is unprecedented uncertainty and, potentially, a design moment for fundamental change.</p>
+  </div>
+  <div class="l-intro">
+    <h2>Nine principles for future-ready governance</h2>
+    <p>Fourteen of the nation's leading experts in education governance and the future of learning spent four months asking a question no existing system was built to answer: <em>How do we govern a learning ecosystem that actually helps every young person flourish in life, career, and democracy in the intelligence age?</em></p>
+    <p>They identified nine principles that future-ready governance should embody:</p>
+    <div class="l-principles">
+      <div class="lp">Meaningful learner and family agency</div>
+      <div class="lp">Equitable, portable funding</div>
+      <div class="lp">A diverse provider ecosystem</div>
+      <div class="lp">Adaptive, performance-based accountability</div>
+      <div class="lp">Learner data as a personal asset</div>
+      <div class="lp">Multiple pathways to mastery</div>
+      <div class="lp">Individual thriving and the common good</div>
+      <div class="lp">Governance that adapts its own rules</div>
+      <div class="lp">A guaranteed safety net for every learner</div>
+    </div>
+  </div>
+  <div class="l-cta">
+    <div class="prompt">How does your governance environment compare?</div>
+    <div class="sub">Take the diagnostic to see where your system aligns with these principles and where the gaps are. Nine questions, about five minutes.</div>
+    <div class="aud-grid">
+      <div class="ac" onclick="startDiag('policy')"><div class="lb">I shape policy</div><div class="ds">State, district, or system leader</div></div>
+      <div class="ac" onclick="startDiag('funder')"><div class="lb">I fund innovation</div><div class="ds">Philanthropist or funder</div></div>
+      <div class="ac" onclick="startDiag('researcher')"><div class="lb">I study education</div><div class="ds">Researcher or analyst</div></div>
+      <div class="ac" onclick="startDiag('innovator')"><div class="lb">I'm building new models</div><div class="ds">Governance innovator or practitioner</div></div>
+    </div>
+    <p class="skip"><a onclick="startDiag('general')">Skip ahead to the diagnostic &rarr;</a></p>
+  </div>
+</div>
+
+<!-- ═══ DIAGNOSTIC ═══ -->
+<div id="pg-diag" class="page diagnostic">
+  <div class="dh">
+    <button class="db" onclick="goBack()">&larr; Back</button>
+    <div class="pb"><div id="pF" class="pf"></div></div>
+    <span id="pT" class="pt">1/9</span>
+  </div>
+  <div class="dbody"><div id="qA" class="qw"></div></div>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div id="pg-results" class="page results">
+  <div class="rt">
+    <h2>Your Governance Readiness Profile</h2>
+    <p>Nine principles for future-ready learning, mapped against your governance environment.</p>
+  </div>
+  <div class="rb">
+    <div class="cd"><div class="rw"><canvas id="radar" width="380" height="380"></canvas></div></div>
+    <div id="interpCard" class="cd"></div>
+    <div id="nextCard" class="cd"></div>
+    <div id="fbiSection" class="fbi-section"></div>
+    <div style="text-align:center;padding:.75rem 0">
+      <div class="br" style="justify-content:center">
+        <a class="btn bw" href="https://docs.google.com/document/d/1CnWblYx-x16RmfPZ1uXyt8_7KK62rELCrxkiyn7dNew/edit" target="_blank">Read the Full Report</a>
+        <button class="btn bw" onclick="showPage('pg-about')">About the Design Group</button>
+        <button class="btn bm" onclick="resetAll()">Retake Diagnostic</button>
+      </div>
+    </div>
+    <div class="ft">A product of the H3 Governance Design Group, convened by <a href="https://learnerstudio.org" target="_blank">LearnerStudio</a>. Planning and facilitation by <a href="https://www.linkedin.com/in/jasonweeby/" target="_blank">Jason Weeby</a>, Periscope Advising.</div>
+  </div>
+</div>
+
+<!-- ═══ FIVE BIG IDEAS ═══ -->
+<div id="pg-ideas" class="page ideas">
+  <div class="id-top">
+    <h2>The Five Big Ideas</h2>
+    <p>What fourteen experts learned about governing for the future of learning.</p>
+  </div>
+  <div class="id-nav" id="ideaTabs"></div>
+  <div class="id-body" id="ideaPanels"></div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div id="pg-about" class="page about">
+  <div class="abt"><h2>About the Design Group</h2><p>An intentionally heterodox group. Not all members agreed on everything. That was the point.</p></div>
+  <div class="abb">
+    <h3>The Process</h3>
+    <p>LearnerStudio convened the H3 Governance Design Group in 2025 to tackle a challenge no existing governance model was designed for: how to govern a learning ecosystem that helps every young person flourish in the intelligence age.</p>
+    <p>The group was selected for its diversity of perspective, spanning the political spectrum from progressive community organizers to market-oriented reformers, from state policy experts to school founders. What everyone shared was dissatisfaction with the status quo and commitment to learner-centered goals.</p>
+    <p>Over four sessions spanning August through October 2025, the group mapped the current governance landscape, analyzed alignment with the future-ready learning vision, forged governance design principles through intensive debate, and began identifying fertile ground for experimentation. The process modeled what the group believes future-ready governance requires: the capacity to hold productive tension and disagree without disengaging.</p>
+    <h3>Design Group Members</h3>
+    <div class="mg">
+      <div class="mm"><div class="n">Bethany Little</div><div class="o">EducationCounsel</div></div>
+      <div class="mm"><div class="n">Bibb Hubbard</div><div class="o">Learning Heroes</div></div>
+      <div class="mm"><div class="n">Doannie Tran</div><div class="o">Center for Innovation in Education</div></div>
+      <div class="mm"><div class="n">Emily Liebtag</div><div class="o">Education Reimagined</div></div>
+      <div class="mm"><div class="n">Gisele Shorter</div><div class="o">Nellie Mae Education Foundation</div></div>
+      <div class="mm"><div class="n">Jon Deane</div><div class="o">GreatSchools.org</div></div>
+      <div class="mm"><div class="n">Julie Squire</div><div class="o">Bellwether</div></div>
+      <div class="mm"><div class="n">Kara Bobroff</div><div class="o">One Generation Fund</div></div>
+      <div class="mm"><div class="n">Macke Raymond</div><div class="o">Hoover Institution</div></div>
+      <div class="mm"><div class="n">Robin Lake</div><div class="o">CRPE, Arizona State University</div></div>
+      <div class="mm"><div class="n">Tom Vander Ark</div><div class="o">Getting Smart</div></div>
+      <div class="mm"><div class="n">Tyler Thigpen</div><div class="o">The Forest School &amp; ISDL</div></div>
+      <div class="mm"><div class="n">Vicki Phillips</div><div class="o">Tennessee State Board of Education</div></div>
+      <div class="mm"><div class="n">Zoe Stemm-Calderon</div><div class="o">Raikes Foundation</div></div>
+    </div>
+    <h3>LearnerStudio Team</h3>
+    <div class="mg">
+      <div class="mm"><div class="n">Babak Mostaghimi</div><div class="o">LearnerStudio</div></div>
+      <div class="mm"><div class="n">Kim Smith</div><div class="o">LearnerStudio</div></div>
+    </div>
+    <h3>Planning &amp; Facilitation</h3>
+    <div class="mg">
+      <div class="mm"><div class="n">Jason Weeby</div><div class="o"><a href="https://www.linkedin.com/in/jasonweeby/" target="_blank" style="color:var(--mag)">Periscope Advising</a></div></div>
+    </div>
+    <a class="abk" onclick="history.back?showPage(lastPage||'pg-results'):0">&larr; Back</a>
+  </div>
+</div>
+
+<script>
+// ═══ DATA ═══
+const QS=[
+{principle:"Learner & Family Agency",short:"Agency",text:"A family wants to combine public school math, a community coding program, and an online science course into one learning pathway for their teenager. In your governance environment, this is:",opts:[{t:"Actively supported with navigation resources, counseling, and funding that follows the learner across settings",s:4,l:"A"},{t:"Technically possible, but the family is on their own to figure it out and may lose access to some services",s:3,l:"B"},{t:"Requires special permission or waivers that few families know how to obtain",s:2,l:"C"},{t:"Effectively impossible under current enrollment, funding, and seat-time rules",s:1,l:"D"}],full:"Meaningful agency extends beyond simple choice. It ensures families have clear, actionable information, expert guidance, and resources to navigate and assemble a learning journey that meets their unique needs."},
+{principle:"Equitable & Portable Funding",short:"Funding",text:"A student with significant learning disabilities transfers from one provider to another mid-year. The funding associated with their additional needs:",opts:[{t:"Follows them immediately, weighted to reflect their actual support costs, regardless of provider type",s:4,l:"A"},{t:"Transfers, but with delays and without full weighting for the complexity of their needs",s:3,l:"B"},{t:"Partially follows, but significant resources remain tied to the original provider or district",s:2,l:"C"},{t:"Stays with the original provider; the receiving school must absorb costs from its existing budget",s:1,l:"D"}],full:"Funding is the primary lever for fairness and access. Resources attached to individual learners, weighted to account for specific needs, ensure those with the most significant challenges receive the most support."},
+{principle:"Diverse Provider Ecosystem",short:"Providers",text:"A community organization with strong youth development outcomes wants to become a recognized learning provider eligible for public funding. The path to doing so is:",opts:[{t:"Clear and accessible, with defined quality standards, support for emerging providers, and a reasonable timeline",s:4,l:"A"},{t:"Possible through existing channels like charter authorization or district partnerships, with significant effort",s:3,l:"B"},{t:"Technically available but requires navigating complex bureaucratic processes most organizations can't manage",s:2,l:"C"},{t:"Effectively closed; only established institutional types are recognized as eligible providers",s:1,l:"D"}],full:"Governance should steward a healthy, innovative ecosystem of learning opportunities, actively encouraging and supporting a diverse range of providers."},
+{principle:"Adaptive Accountability",short:"Accountability",text:"When a learning provider receiving public funds consistently fails to produce strong outcomes for students, the governance response is:",opts:[{t:"Swift intervention based on multiple outcome measures, with meaningful support before sanctions and clear consequences",s:4,l:"A"},{t:"Triggered primarily by standardized test results, with a defined process for escalation and consequences",s:3,l:"B"},{t:"Slow and focused mainly on compliance inputs rather than demonstrated learning outcomes",s:2,l:"C"},{t:"Minimal; accountability depends mainly on families choosing to leave or market forces",s:1,l:"D"}],full:"This principle moves beyond mere transparency to establish the standard for learning that providers receiving public funds must meet, with real enforcement."},
+{principle:"Learner Data as Personal Asset",short:"Data",text:"A learner's record of skills, competencies, and experiences across multiple learning settings:",opts:[{t:"Is owned by the learner, portable across any provider, interoperable between systems, and controlled by the family",s:4,l:"A"},{t:"Can be compiled by the family, but requires separately requesting records from each provider",s:3,l:"B"},{t:"Exists in fragmented institutional systems that don't communicate with each other",s:2,l:"C"},{t:"Is primarily an institutional tool; learners and families have limited access or portability",s:1,l:"D"}],full:"Learner data should be a portable asset owned and controlled by the learner. Governance must ensure this data is secure, portable, and interoperable."},
+{principle:"Multiple Pathways to Mastery",short:"Pathways",text:"A 16-year-old demonstrates advanced math competency through a community college course and an industry certification. Your governance system:",opts:[{t:"Recognizes these as valid evidence of mastery, equivalent to or exceeding traditional coursework for all purposes",s:4,l:"A"},{t:"Grants partial credit, but the student must also complete some standard seat-time requirements",s:3,l:"B"},{t:"May acknowledge them informally, but they don't count toward official graduation requirements",s:2,l:"C"},{t:"Requires completion of the standard course sequence regardless of demonstrated mastery",s:1,l:"D"}],full:"This principle shifts focus from seat-time and prescribed curricula to demonstrated mastery of essential knowledge and future-ready competencies."},
+{principle:"Individual Thriving & the Common Good",short:"Common Good",text:"When designing what students should learn and how learning is measured, the governance process:",opts:[{t:"Explicitly balances individual success with civic knowledge, democratic participation, and shared purpose",s:4,l:"A"},{t:"Addresses both, but individual outcomes like test scores and graduation rates dominate the framework",s:3,l:"B"},{t:"Focuses primarily on individual career preparation; civic education is elective or informal",s:2,l:"C"},{t:"Does not systematically address either individual flourishing or collective civic purpose",s:1,l:"D"}],full:"Public education has a dual purpose: fostering individual thriving while preparing citizens to contribute to democratic society."},
+{principle:"Adaptive Governance",short:"Adaptability",text:"When evidence emerges that a governance rule is producing unintended negative consequences for learners:",opts:[{t:"Built-in review mechanisms trigger evaluation, and the rule can be revised within a defined timeframe",s:4,l:"A"},{t:"Revision is possible but requires legislative or regulatory action that typically takes years",s:3,l:"B"},{t:"Informal workarounds emerge locally, but the rule itself rarely changes",s:2,l:"C"},{t:"Rules persist regardless of evidence; changing them is politically or structurally prohibitive",s:1,l:"D"}],full:"The governance system itself must be agile, responsive, and capable of evolution."},
+{principle:"Safety Net & Equitable Access",short:"Safety Net",text:"A student expelled from a private provider, whose family can't navigate choices, or who arrives mid-year with complex needs is guaranteed:",opts:[{t:"Immediate access to a high-quality learning environment with full support services and no enrollment gaps",s:4,l:"A"},{t:"Access to a default public option, though quality and resources vary significantly by location",s:3,l:"B"},{t:"Access in theory, but practical barriers like transportation, waitlists, or capacity create gaps",s:2,l:"C"},{t:"No clearly guaranteed access; the safety net is ambiguous, underfunded, or missing",s:1,l:"D"}],full:"Every learner and family can expect a non-negotiable baseline. All learners, especially the most vulnerable, must have access to quality learning environments."}
+];
+
+const IDEAS=[
+{num:"One",title:"The Archetype Trap",subtitle:"No existing governance model was designed for the future of learning.",body:`<p>The design group analyzed six dominant governance archetypes in American education: district schools, charter schools, ESAs and vouchers, private schools, Bureau of Indian Education schools, and Department of Defense schools. Each comes with its own "policy bundle," an interlocking set of regulations, practices, and expectations that have proven remarkably durable even when individual policies change.</p><p>The finding was unambiguous: <strong>no single archetype satisfies more than a handful of future-ready governance principles.</strong> And the strengths and weaknesses are structurally linked. The principles where choice-based models score highest, like learner agency and provider diversity, are precisely the ones where they score lowest on corresponding safeguards like accountability and equitable access.</p><p>Two constraints proved truly universal. Across every archetype, without exception, learner data remains an institutional tool rather than a portable, learner-owned asset. And no archetype validates multiple pathways to mastery of future-ready competencies.</p><h4>Why this matters</h4><p>The instinct, when confronting these constraints, is to look toward a different archetype as the answer. The design group's analysis points to a different conclusion: switching archetypes simply trades one set of constraints for another. The current system was designed for stability and uniformity. The future of learning demands variability, personalization, and continuous adaptation. That's a fundamentally different design challenge.</p><h4>What comes next</h4><p>The field needs to move beyond archetype selection toward deliberate policy design, unbundling specific policies from their governance archetypes and recombining them in new ways. This requires research into which policies can be detached from their bundles, pilots that test new combinations, and honest assessment of what works.</p>`},
+{num:"Two",title:"Someone Has to Be the Safety Net",subtitle:"The 'educator of last resort' mandate is invisible but shapes everything.",body:`<p>One of the most consequential insights from the design group's work was surfacing a governance rule that isn't written in any policy document but shapes the entire landscape: traditional public school districts are the de facto "educator of last resort."</p><p>This legal mandate means districts must accept any child who shows up, regardless of need or cost. A student with profound disabilities who might be turned away by a private provider must be served by the district. A family that cannot navigate choice mechanisms, or simply does not want to, has a guaranteed option.</p><p><strong>This creates massive structural asymmetries.</strong> Districts bear a double burden: they must serve any child while facing the tightest regulations and accountability requirements. Meanwhile, other governance models can be selective, whether explicitly or through practical barriers, without bearing corresponding responsibility for who they don't serve.</p><h4>Why this matters</h4><p>Every conversation about expanding choice, diversifying providers, or personalizing learning pathways must answer the question: what happens to the safety net? Some design group members argued that a well-designed public option could be the highest quality choice, not the option of last resort. Others worried that any system placing choice burdens on families would inevitably leave behind those least equipped to navigate it.</p><p>The group reached consensus that this function must be explicitly designed, not inherited by default. Whatever governance model emerges, someone has to be responsible for every child, especially those no one else will serve.</p><h4>What comes next</h4><p>Research is needed into how other sectors and countries have maintained universal access guarantees within diverse provider ecosystems. Pilots should explicitly design the safety net function rather than assuming existing districts will continue to absorb it.</p>`},
+{num:"Three",title:"The Nine Principles Work as a System",subtitle:"Progress on any one principle depends on the strength of the others.",body:`<p>Through intensive pressure-testing across Sessions 3 and 4, the design group forged nine governance design principles. They are intended not as a checklist but as an integrated, indivisible framework.</p><p><strong>The principles reinforce and constrain each other.</strong> Expanding learner agency (Principle 1) without equitable funding (Principle 2) creates agency only for those who can afford it. Building a diverse provider ecosystem (Principle 3) without adaptive accountability (Principle 4) invites fraud and harm. Validating multiple pathways (Principle 6) without portable data (Principle 5) means learner accomplishments disappear when they move between providers.</p><h4>The nine principles</h4><p>Future-ready governance: (1) supports meaningful learner and family agency; (2) funds learning equitably and portably; (3) creates conditions for a diverse ecosystem of high-quality learning providers; (4) ensures adaptive, performance-based accountability; (5) protects learner data as a personal asset; (6) validates mastery of future-ready competencies; (7) enables individual thriving and the common good; (8) adapts its own rules and structures through continuous learning; and (9) guarantees every learner a safe, caring environment and equitable access to foundational knowledge.</p><h4>How to use the principles</h4><p>The principles serve as an <strong>assessment tool</strong> for evaluating existing governance structures, a <strong>design guide</strong> for creating new ones, a <strong>communication framework</strong> for shared language across stakeholder groups, and a <strong>research agenda</strong> mapping territory for investigation. Each principle implies questions that need answers before governance redesign can move from theory to practice.</p>`},
+{num:"Four",title:"The Hardest Questions Are About Values",subtitle:"Governance redesign is a design challenge, not a technical problem.",body:`<p>The design group discovered that questions about governance quickly become questions about values and power. Where the group disagreed most sharply, on accountability mechanisms, on what should be required versus allowed, and on how to balance individual and collective good, revealed the hardest design challenges ahead.</p><h4>Where the group found consensus</h4><p><strong>High agreement</strong> emerged on the need and timing for change, on portable and weighted funding as a concept, on the dual purpose of individual thriving and the common good, and on the insufficiency of transparency alone as accountability.</p><p><strong>Medium agreement</strong> existed around family agency (necessary, but with significant concern about burden on families) and equal accountability for all recipients of public funding (agreed in principle, contested in form).</p><h4>Where fundamental questions persist</h4><p><strong>Low agreement</strong> remained on specific accountability mechanisms (to whom, with what measures, with what consequences), on what is required versus what is allowed for families, providers, and public agencies, and on what should be taught and how that should be decided.</p><p>On many of these questions, there is no "right" answer that resolves the tension. Different communities will make different choices. What governance can do is create frameworks within which those choices can be made transparently, accountably, and with appropriate guardrails. <strong>Disagreement is data, not an obstacle.</strong> Where we can't reach consensus reveals the hardest design questions, the ones governance exists to navigate.</p>`},
+{num:"Five",title:"This Is a Design Moment",subtitle:"Crisis and opportunity are the same forces viewed from different angles.",body:`<p>The design group opened by asking participants to describe the current governance moment as a newspaper headline. Their responses painted a picture of a system in flux:</p><div class="ins"><p>"Chaos creates opportunities and risks"</p></div><div class="ins"><p>"Public Education Has a Governance Vacuum. Who Will Fill It and How?"</p></div><div class="ins"><p>"Collapse of the administrative state revealing need for new social contract"</p></div><p>The consensus was clear: this is not incremental evolution. Power is diffusing from traditional centers, the Department of Education, state education agencies, and districts, toward families and new providers. The structures to govern this diffusion remain largely unbuilt.</p><h4>Three categories of immediate work</h4><p><strong>Research.</strong> How do governance systems outside U.S. education hold diverse providers accountable without relying on a single standardized measure? In systems with portable funding, what mechanisms prevent cream-skimming? When meaningful decision-making authority has been redistributed, what new coordination problems emerged?</p><p><strong>Pilots.</strong> Several states and communities show readiness for governance experimentation. Carefully designed pilots should test the nine principles in practice, with robust evaluation frameworks. The cross-ideological collaboration modeled in this design group should be replicated at the local level, in communities where governance decisions are actually made.</p><p><strong>Engagement.</strong> Governance cannot be designed in conference rooms alone. The voices notably absent from this design group, including learners, families, frontline educators, and community members, particularly those historically marginalized, must be central to what comes next.</p><p>The governance structures that will help young people flourish in the intelligence age do not yet exist. They will emerge from sustained dialogue, careful experimentation, honest assessment, and the courage to navigate disagreement in service of a shared goal.</p>`}
+];
+
+let cur=0,ans=Array(QS.length).fill(null),aud='general',tmr=null,lastPage='pg-results';
+
+// ═══ NAV ═══
+function showPage(id){
+  lastPage=document.querySelector('.page.active')?.id||'pg-landing';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function toggleMenu(){document.getElementById('menuOverlay').classList.toggle('open')}
+function closeThen(pg,ideaIdx){
+  toggleMenu();
+  if(pg==='pg-ideas'){showPage('pg-ideas');if(ideaIdx!==undefined)switchIdea(ideaIdx);}
+  else showPage(pg);
+}
+function startDiag(a){aud=a;showPage('pg-diag');renderQ()}
+function goBack(){if(tmr){clearTimeout(tmr);tmr=null}if(cur>0){cur--;renderQ()}else showPage('pg-landing')}
+function resetAll(){cur=0;ans=Array(QS.length).fill(null);showPage('pg-landing')}
+
+// ═══ QUESTIONS ═══
+function renderQ(){
+  const q=QS[cur],a=document.getElementById('qA');
+  a.innerHTML=`<span class="qtag">${q.principle}</span><div class="qt">${q.text}</div><div class="opts">${q.opts.map((o,i)=>`<div class="opt ${ans[cur]===i?'sel':''}" data-l="${o.l}" onclick="pick(${i})">${o.t}</div>`).join('')}</div>`;
+  document.getElementById('pF').style.width=((cur+1)/QS.length*100)+'%';
+  document.getElementById('pT').textContent=(cur+1)+'/'+QS.length;
+}
+function pick(i){
+  if(tmr){clearTimeout(tmr);tmr=null}
+  ans[cur]=i;
+  document.querySelectorAll('.opt').forEach((e,j)=>e.classList.toggle('sel',j===i));
+  tmr=setTimeout(()=>{
+    if(cur<QS.length-1){const a=document.getElementById('qA');a.classList.add('slo');setTimeout(()=>{cur++;renderQ();a.classList.remove('slo');a.classList.add('sli');setTimeout(()=>a.classList.remove('sli'),300)},200);}
+    else showResults();
+  },1200);
+}
+
+// ═══ RESULTS ═══
+function showResults(){
+  if(tmr){clearTimeout(tmr);tmr=null}
+  showPage('pg-results');
+  const sc=ans.map((a,i)=>a!==null?QS[i].opts[a].s:1);
+  drawRadar(sc);genInterp(sc);genNext(sc);genFBI(sc);
+}
+
+function genInterp(sc){
+  const avg=sc.reduce((a,b)=>a+b,0)/sc.length;
+  const hi=[],lo=[];
+  sc.forEach((s,i)=>{if(s>=3)hi.push(i);if(s<=2)lo.push(i)});
+  const name=i=>QS[i].short;
+  let h='<h3>What your profile means</h3>';
+
+  // Overall framing
+  if(avg>=3.2) h+=`<p>Your governance environment shows unusually strong alignment with future-ready principles. Strengths in <strong>${hi.map(name).join(', ')}</strong> suggest a system that has already begun adapting to new realities. The design group found that no dominant governance archetype satisfies more than a handful of these principles, so your profile indicates meaningful progress.</p>`;
+  else if(avg>=2.5) h+=`<p>Your governance environment shows moderate alignment, with real strengths in <strong>${hi.map(name).join(', ')||'no single area strongly'}</strong> alongside gaps in <strong>${lo.map(name).join(', ')}</strong>. This mixed profile is common. The design group found that every governance archetype trades strengths in some principles for weaknesses in others. Your profile reflects that structural pattern.</p>`;
+  else if(avg>=1.8) h+=`<p>Your governance environment shows limited alignment with future-ready principles, with the most significant gaps in <strong>${lo.map(name).join(', ')}</strong>${hi.length?'. You do show some alignment in <strong>'+hi.map(name).join(', ')+'</strong>':''}. The design group found this pattern across every governance archetype they studied. Current systems were designed for stability and uniformity; the principles describe governance for a fundamentally different model of learning.</p>`;
+  else h+=`<p>Your governance environment shows significant distance from the principles the design group identified. Every response indicates a system designed around the assumptions of traditional schooling: seat-time requirements, institution-centered data, compliance-based accountability, and limited pathways. This isn't unusual. It reflects the reality that current governance was built for a different era of education.</p>`;
+
+  // Specific pattern analysis
+  const ag=sc[0],fn=sc[1],pr=sc[2],ac=sc[3],da=sc[4],pa=sc[5],cg=sc[6],ad=sc[7],sn=sc[8];
+
+  // Agency vs Safety Net
+  if(ag>=3&&sn<=2) h+=`<p><strong>Agency without a safety net.</strong> Your environment supports learner and family choice but lacks a corresponding guarantee that every child has access to quality learning. The design group identified this as a defining tension: expanding choice without explicitly designing the safety net function means the most vulnerable learners fall through the cracks. Districts currently serve as the de facto "educator of last resort," but this mandate is often invisible and underfunded.</p>`;
+  else if(sn>=3&&ag<=2) h+=`<p><strong>Safety net without flexibility.</strong> Your environment guarantees access but constrains the learner and family agency that future-ready learning requires. The design group recognized that the "educator of last resort" function is essential, not something to dismantle. But they argued it need not come packaged with rigid enrollment rules, seat-time requirements, and limited pathways. The challenge is maintaining the guarantee while opening space for personalization.</p>`;
+  else if(ag>=3&&sn>=3) h+=`<p><strong>Both agency and safety net.</strong> Your environment shows strength in both learner choice and guaranteed access, which is the balance the design group argued is essential. This is a strong foundation. The next question is whether the other principles, particularly accountability, data portability, and pathway recognition, are keeping pace.</p>`;
+
+  // Accountability vs Providers
+  if(pr>=3&&ac<=2) h+=`<p><strong>Provider diversity without oversight.</strong> Your environment supports a range of learning providers but lacks the accountability mechanisms to ensure quality. The design group agreed unanimously that transparency alone is insufficient as accountability. A diverse ecosystem requires clear standards, meaningful measurement, and consequences for failure. Without these, provider diversity becomes a risk rather than an asset.</p>`;
+  else if(ac>=3&&pr<=2) h+=`<p><strong>Accountability without ecosystem diversity.</strong> Your environment has accountability structures but limits who can serve as a learning provider. The design group saw this pattern in heavily regulated systems where compliance requirements effectively exclude non-traditional providers, even those with strong outcomes. The question is whether accountability can be redesigned to focus on demonstrated learning rather than input compliance.</p>`;
+
+  // Funding
+  if(fn<=2) h+=`<p><strong>Funding remains institution-centered.</strong> When resources don't follow learners, every other principle is harder to achieve. The concept of portable, weighted funding attracted the broadest support of any idea in the design group. Resources attached to individual learners, weighted for need, flowing across providers based on family decisions: this is the mechanism that makes agency, provider diversity, and equitable access structurally possible rather than aspirational.</p>`;
+
+  // Data + Pathways universal gap
+  if(da<=2&&pa<=2) h+=`<p><strong>The universal gap: data and pathways.</strong> Your profile reflects a pattern the design group found across every governance archetype without exception. Learner data remains an institutional tool rather than a portable asset, and no system validates multiple pathways to mastery. These two principles represent the frontier of governance design, where entirely new infrastructure and policy thinking is needed.</p>`;
+
+  // Common Good
+  if(cg<=2) h+=`<p><strong>The missing dual purpose.</strong> Your environment doesn't systematically balance individual outcomes with collective civic purpose. The design group acknowledged a hard truth: we lack consensus on what "the common good" means in education or how governance should advance it. But they insisted that ducking the question is itself a choice, one that defaults to purely individual metrics and leaves democratic preparation to chance.</p>`;
+
+  // Adaptability
+  if(ad>=3) h+=`<p><strong>Governance that can learn.</strong> Your environment shows capacity for its own rules to evolve, which is rare. The design group identified adaptive governance as one of the most important and most neglected principles. Systems designed to learn from evidence and adjust their own structures are better positioned to navigate the uncertainty ahead.</p>`;
+  else if(ad<=1) h+=`<p><strong>Governance that can't change itself.</strong> When rules persist regardless of evidence, the system cannot adapt to changing realities. The design group noted that many of the most constraining governance features, like seat-time requirements and Carnegie units, continue not because anyone defends them on the merits but because changing them is politically or structurally prohibitive.</p>`;
+
+  // Closing insight
+  h+=`<div class="ins"><p>"The path to future-ready governance does not run through any existing archetype. The constraints are features of a governance landscape designed for a different era."</p></div>`;
+  document.getElementById('interpCard').innerHTML=h;
+}
+
+function genNext(sc){
+  const gaps=[];sc.forEach((s,i)=>{if(s<=2)gaps.push(i)});
+  let h='<h3>What comes next</h3>';
+  h+='<p>The design group identified three categories of immediate work:</p>';
+  h+='<p><strong>Research:</strong> How do systems outside U.S. education hold diverse providers accountable? In portable funding systems, what prevents cream-skimming? When decision-making authority has been redistributed, what coordination problems emerge?</p>';
+  h+='<p><strong>Pilots:</strong> Carefully designed experiments that test these principles in practice, with robust evaluation, in states and communities ready for governance innovation.</p>';
+  h+='<p><strong>Engagement:</strong> The voices absent from this design group, including learners, families, frontline educators, and historically marginalized communities, must be central to what comes next.</p>';
+  const N={
+    policy:`<h3 style="margin-top:1rem">For policy leaders</h3><p>Your lowest-scoring principles point to where regulatory relief or enabling legislation could have the most impact. The design group noted that seat-time requirements, Carnegie units, and teacher-of-record rules effectively lock in legacy structures. Consider where your system's rules constrain the principles you most want to advance. The "tight-loose" framework, clearly articulating what must be centrally standardized versus locally flexible, may be the most productive design lens for state-level reform.</p>`,
+    funder:`<h3 style="margin-top:1rem">For funders</h3><p>Your profile's gaps map to high-leverage investment opportunities. Consider funding <strong>research</strong> in your lowest-scoring areas: if accountability scored low, invest in studying how non-education sectors hold diverse providers accountable. If data or pathways scored low, fund the technical and policy infrastructure for portable learner records and competency-based credentialing. <strong>Pilot design</strong> is also high-leverage: supporting governance experiments in willing communities, paired with rigorous evaluation, generates the evidence base the field needs.</p>`,
+    researcher:`<h3 style="margin-top:1rem">For researchers</h3><p>Each low-scoring principle maps to open research questions the design group identified as actionable within 6-18 months. Priorities include: how have non-education governance systems balanced provider diversity with quality assurance? What happens to equity when funding becomes portable? How has the individual-vs-collective balance in education governance shifted historically, and what drove those shifts? The group also flagged the need for empirical study of "policy bundles," the interlocking regulations that resist piecemeal reform.</p>`,
+    innovator:`<h3 style="margin-top:1rem">For governance innovators</h3><p>Your profile helps locate your work within the broader landscape. Where your environment scores well may be where your innovations are taking hold. Where it scores poorly reveals adjacent opportunities or systemic constraints worth designing around. The most promising path forward isn't replacing one archetype with another but unbundling specific policies from different models and recombining them. Credit flexibility, community-driven accountability, portable credentialing: if you're working on any of these, your work connects directly to the principles where the field has the least progress.</p>`,
+    general:''
+  };
+  if(N[aud])h+=N[aud];
+  document.getElementById('nextCard').innerHTML=h;
+}
+
+function genFBI(sc){
+  let h=`<h3>Go deeper: The Five Big Ideas</h3><p>The design group's work surfaced five foundational insights about what it will take to govern the future of learning.</p><div class="fbi-grid">`;
+  IDEAS.forEach((idea,i)=>{
+    h+=`<div class="fbi-card" onclick="showPage('pg-ideas');switchIdea(${i})"><div class="fbi-num">Idea ${idea.num}</div><h4>${idea.title}</h4><p>${idea.subtitle}</p></div>`;
+  });
+  h+=`</div>`;
+  document.getElementById('fbiSection').innerHTML=h;
+}
+
+// ═══ IDEAS PAGE ═══
+function buildIdeas(){
+  const tabs=document.getElementById('ideaTabs');
+  const panels=document.getElementById('ideaPanels');
+  tabs.innerHTML=IDEAS.map((idea,i)=>`<button class="id-tab ${i===0?'active':''}" onclick="switchIdea(${i})">${idea.title}</button>`).join('');
+  panels.innerHTML=IDEAS.map((idea,i)=>{
+    const prev=i>0?`<a class="idea-nav-btn" onclick="switchIdea(${i-1})">&larr; ${IDEAS[i-1].title}</a>`:'<span></span>';
+    const next=i<IDEAS.length-1?`<a class="idea-nav-btn" onclick="switchIdea(${i+1})">${IDEAS[i+1].title} &rarr;</a>`:'<span></span>';
+    return `<div class="idea-panel ${i===0?'active':''}" id="idea-${i}"><span class="idea-num">Idea ${idea.num}</span><h3>${idea.title}</h3><div class="idea-body">${idea.body}</div><div class="idea-nav-row">${prev}${next}</div></div>`;
+  }).join('');
+}
+function switchIdea(i){
+  document.querySelectorAll('.id-tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.idea-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
+  document.getElementById('ideaPanels').scrollIntoView({behavior:'smooth',block:'start'});
+}
+buildIdeas();
+
+// ═══ RADAR ═══
+function drawRadar(sc){
+  const c=document.getElementById('radar'),x=c.getContext('2d'),d=window.devicePixelRatio||1;
+  c.width=380*d;c.height=380*d;c.style.width='380px';c.style.height='380px';x.scale(d,d);
+  const cx=190,cy=195,R=135,n=sc.length,st=Math.PI*2/n,s=-Math.PI/2;
+  for(let r=1;r<=4;r++){const rd=(r/4)*R;x.beginPath();for(let i=0;i<=n;i++){const a=s+i*st,px=cx+rd*Math.cos(a),py=cy+rd*Math.sin(a);i===0?x.moveTo(px,py):x.lineTo(px,py)}x.strokeStyle=r===4?'rgba(27,63,57,.11)':'rgba(27,63,57,.04)';x.lineWidth=1;x.stroke()}
+  x.font='11px Varta,sans-serif';x.fillStyle='#768C88';x.textAlign='center';x.textBaseline='middle';
+  const lb=QS.map(q=>q.short);
+  for(let i=0;i<n;i++){const a=s+i*st;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));x.strokeStyle='rgba(27,63,57,.04)';x.stroke();x.fillText(lb[i],cx+(R+22)*Math.cos(a),cy+(R+22)*Math.sin(a))}
+  x.beginPath();for(let i=0;i<=n;i++){const j=i%n,a=s+j*st,rd=(sc[j]/4)*R;i===0?x.moveTo(cx+rd*Math.cos(a),cy+rd*Math.sin(a)):x.lineTo(cx+rd*Math.cos(a),cy+rd*Math.sin(a))}
+  x.fillStyle='rgba(27,63,57,.1)';x.fill();x.strokeStyle='#1B3F39';x.lineWidth=2;x.stroke();
+  for(let i=0;i<n;i++){const a=s+i*st,rd=(sc[i]/4)*R;x.beginPath();x.arc(cx+rd*Math.cos(a),cy+rd*Math.sin(a),4.5,0,Math.PI*2);x.fillStyle=sc[i]>=3?'#1B3F39':sc[i]>=2?'#842800':'#94266B';x.fill()}
+}
+</script>
+</body>
+</html>
